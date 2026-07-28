@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  iopaint:
+    build: .
+    container_name: iopaint
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ./cache:/app/cache
+      - ./images:/app/images
+    environment:
+      - TORCH_HOME=/app/cache/torch
+      - HF_HOME=/app/cache/huggingface
+    restart: unless-stopped
